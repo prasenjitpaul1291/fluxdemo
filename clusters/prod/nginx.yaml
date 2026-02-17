@@ -1,0 +1,25 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: fluxdemo-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/prasenjitpaul1291/fluxdemo
+  ref:
+    branch: main
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: nginx-app
+  namespace: flux-system
+spec:
+  interval: 1m
+  path: "./apps/nginx/base"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: fluxdemo-repo
+  targetNamespace: default
+  wait: true
